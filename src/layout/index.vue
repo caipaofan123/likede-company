@@ -52,7 +52,10 @@ export default {
     background-color: #e9eef3;
     color: #333;
     // text-align: center;
-    line-height: 30px;
+    // line-height: 30px;
+
+    // line-height: 160px;
+
   }
 
   .el-container {
