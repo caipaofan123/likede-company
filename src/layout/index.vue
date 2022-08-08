@@ -1,30 +1,30 @@
 <template>
   <div class="layout">
     <el-container>
-      <el-header><Dheader></Dheader></el-header>
+      <el-header><Dheader /></el-header>
       <el-container>
-        <el-aside width="167px"><Dsidebar></Dsidebar></el-aside>
-        <el-main><router-view></router-view></el-main>
+        <el-aside width="167px"><Dsidebar /></el-aside>
+        <el-main><router-view /></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
-import Dheader from "@/layout/components/header.vue";
-import Dsidebar from "@/layout/components/sidebar.vue";
+import Dheader from '@/layout/components/header.vue'
+import Dsidebar from '@/layout/components/sidebar.vue'
 export default {
-  data() {
-    return {};
-  },
   components: {
     Dheader,
     Dsidebar
   },
+  data() {
+    return {}
+  },
   created() {},
 
-  methods: {},
-};
+  methods: {}
+}
 </script>
 
 <style scoped lang="scss">
@@ -51,8 +51,8 @@ export default {
   .el-main {
     background-color: #e9eef3;
     color: #333;
-    text-align: center;
-    line-height: 160px;
+    // text-align: center;
+    // line-height: 160px;
   }
 
   .el-container {

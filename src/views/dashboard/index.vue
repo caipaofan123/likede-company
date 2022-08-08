@@ -8,10 +8,9 @@
 
 <script>
 
-
 export default {
-  name: 'Dashboard',
-  
+  name: 'Dashboard'
+
 }
 </script>
 
@@ -25,7 +24,7 @@ export default {
     line-height: 46px;
     color: gold
   }
-  
+
 }
 img{
     width:600px
