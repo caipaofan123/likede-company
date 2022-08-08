@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card class="box-card">
-      <el-form ref="form"  label-width="100px">
+      <el-form ref="form" label-width="100px">
         <el-form-item label="设备编号：">
           <el-input></el-input>
         </el-form-item>
@@ -46,14 +46,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <vmEdit :dialogVisible='dialogVisible' @close='onClose' 
-    :dataInfo='dataInfo'
+    <vmEdit
+      :dialogVisible="dialogVisible"
+      @close="onClose"
+      :dataInfo="dataInfo"
     ></vmEdit>
   </div>
 </template>
 
 <script>
-import vmEdit from './components/vm-edit.vue'
+import vmEdit from "./components/vm-edit.vue";
 import { getVms } from "@/api/vm";
 export default {
   data() {
@@ -65,7 +67,7 @@ export default {
       dataInfo: {},
     };
   },
-  components:{
+  components: {
     vmEdit,
   },
   created() {
@@ -78,17 +80,15 @@ export default {
       // console.log(res);
       this.tableData = res.data.currentPageRecords;
     },
-    handleEdit(index, data){
-      this.dialogVisible=true
-      this.dataInfo=data
+    handleEdit(index, data) {
+      this.dialogVisible = true;
+      this.dataInfo = data;
       // console.log(this.dataInfo);
     },
-    handleDelete(){
-
+    handleDelete() {},
+    onClose() {
+      this.dialogVisible = false;
     },
-    onClose(){
-      this.dialogVisible=false
-    }
   },
 };
 </script>
