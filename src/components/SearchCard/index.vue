@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  
     <el-form ref="form" :model="form" label-width="100px" >
       <el-form-item label="工单编号：">
         <el-input v-model="form.name"></el-input>
@@ -11,7 +11,7 @@
         <el-button type="primary">查询</el-button>
       </el-form-item>
     </el-form>
-  </el-card>
+ 
 </template>
 
 <script>
