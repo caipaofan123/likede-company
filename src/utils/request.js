@@ -9,15 +9,18 @@ const service = axios.create({
 }); // 创建一个axios的实例
 
 // const isTimeout = () => {
-//   const currentTime = Date.now();
-//   const tokenTime = getTokenTime();
-//   const timeout = 10 * 60 * 1000;
-//   return currentTime - tokenTime > timeout;
-// };
+
+//   const currentTime = Date.now()
+//   const tokenTime = getTokenTime()
+//   const timeout = 10*60 * 1000
+//   return currentTime - tokenTime > timeout
+// }
+
 
 service.interceptors.request.use(async (config) => {
   if (store.state.user.token) {
     config.headers["Authorization"] = `${store.state.user.token}`;
+
   }
   return config;
 }); // 请求拦截器
