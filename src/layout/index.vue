@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import Dheader from '@/layout/components/header.vue'
-import Dsidebar from '@/layout/components/sidebar.vue'
+import Dheader from "@/layout/components/header.vue";
+import Dsidebar from "@/layout/components/sidebar.vue";
 export default {
   components: {
     Dheader,
-    Dsidebar
+    Dsidebar,
   },
   created() {},
 
-  methods: {}
-}
+  methods: {},
+};
 </script>
 
 <style scoped lang="scss">
@@ -49,12 +49,8 @@ export default {
     background-color: #e9eef3;
     color: #333;
 
-    // text-align: center;
+    // text-align: center;  把这2个注掉
     // line-height: 160px;
-
-    // text-align: center;
-    // line-height: 30px;
-
   }
 
   .el-container {
