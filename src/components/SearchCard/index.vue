@@ -1,21 +1,21 @@
 <template>
-  <el-card class="box-card">
-    <el-form ref="form" :model="form" label-width="100px" >
-      <el-form-item label="工单编号：">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="工单状态:">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary">查询</el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+  <el-form ref="form" :model="form" label-width="100px">
+    <el-form-item label="工单编号：">
+      <el-input v-model="form.name"></el-input>
+    </el-form-item>
+    <el-form-item label="工单状态:">
+      <el-input v-model="form.name"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary">查询</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
+
 export default {
+  name:'SearchCard',
   data() {
     return {
       form: {
@@ -31,9 +31,12 @@ export default {
     };
   },
 
-  created() {},
-
-  methods: {},
+  created() {
+    this.getTask();
+  },
+  methods: {
+   
+  },
 };
 </script>
 
@@ -49,8 +52,8 @@ export default {
 .box-card {
   width: 1280px;
 }
-.el-form{
-    display: flex;
+.el-form {
+  display: flex;
 }
 .el-form-item {
   width: 300px;
