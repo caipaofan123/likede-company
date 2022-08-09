@@ -4,10 +4,11 @@ import request from "@/utils/request";
  * 人员搜索(列表页)
  * @returns
  */
-export function getPeopleList() {
+export function getPeopleList(data) {
   return request({
     url: "/api/user-service/user/search",
     method: "GET",
+    data,
   });
 }
 
@@ -15,11 +16,10 @@ export function getPeopleList() {
  * 角色列表
  * @returns
  */
-export function getPeopleRoleList(data) {
+export function getPeopleRoleList() {
   return request({
     url: "/api/user-service/role",
     method: "GET",
-    data,
   });
 }
 /**
@@ -49,7 +49,11 @@ export function getImageUrlAPI(fileName) {
     },
   });
 }
-
+/**
+ * 新增人员
+ * @param {*} data 
+ * @returns 
+ */
 export function getPeopleAddAPI(data) {
   return request({
     url: "/api/user-service/user",
