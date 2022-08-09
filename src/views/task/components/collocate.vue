@@ -28,11 +28,7 @@ export default {
   data() {
     return {
       num: "",
-<<<<<<< HEAD
-      alertValue: "",
-=======
       alertValue: 0,
->>>>>>> feature/task
     };
   },
   props: {
@@ -66,18 +62,11 @@ export default {
     },
     // 自动补货工单阈值
     async getReplenish() {
-<<<<<<< HEAD
-      const data = await getReplenishApi({
-        alertValue: data.alertValue,
-      });
-      console.log(res);
-=======
       const res = await getReplenishApi({
         alertValue: this.num,
       });
       this.alertValue = res.data;
       this.$emit("update:visible", false);
->>>>>>> feature/task
     },
   },
   updated() {},
