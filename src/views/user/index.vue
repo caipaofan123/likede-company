@@ -14,7 +14,10 @@
       </el-form>
     </el-card>
     <el-card class="box-card">
-      <el-button icon="el-icon-circle-plus-outline" class="established-button"
+      <el-button
+        icon="el-icon-circle-plus-outline"
+        class="established-button"
+        @click="addDialog"
         >新建</el-button
       >
       <el-table :data="tableData" style="width: 100%">
@@ -43,7 +46,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <AddPeople></AddPeople>
+    <AddPeople :visible.sync="dialogVisible"></AddPeople>
   </div>
 </template>
 
@@ -58,6 +61,7 @@ export default {
         region: "",
       },
       tableData: [],
+      dialogVisible: false,
     };
   },
   components: {
@@ -69,8 +73,13 @@ export default {
   },
 
   methods: {
+    //表格排序（表格自带）
     indexMethod(index) {
       return index + 1;
+    },
+    //新建的点击事件
+    addDialog() {
+      this.dialogVisible = true;
     },
     onSubmit() {
       // console.log("submit!");
@@ -78,9 +87,10 @@ export default {
     handleClick(row) {
       // console.log(row);
     },
+
     async getPeopleList() {
       const res = await getPeopleList();
-      console.log(res);
+      // console.log(res);
       this.tableData = res.data.currentPageRecords;
     },
   },
@@ -111,7 +121,7 @@ export default {
     color: #fff;
   }
 }
-.del{
+.del {
   color: red;
 }
 </style>
