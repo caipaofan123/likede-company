@@ -1,7 +1,7 @@
-import request from '@/utils/request'
+import request from "@/utils/request";
 
-export const getTask = () => {
+export const searchTasks = () => {
   return request({
-    url: '/api/task-service/task/search'
-  })
-}
+    url: "/api/task-service/task/search",
+  });
+};

@@ -18,9 +18,6 @@ export default {
     Dheader,
     Dsidebar
   },
-  data() {
-    return {}
-  },
   created() {},
 
   methods: {}
@@ -36,7 +33,7 @@ export default {
     background-color: #b3c0d1;
     color: #333;
     text-align: center;
-    line-height: 60px;
+    // line-height: 60px;
     padding: 0 0;
   }
 
@@ -51,8 +48,8 @@ export default {
   .el-main {
     background-color: #e9eef3;
     color: #333;
-    // text-align: center;
-    // line-height: 160px;
+    text-align: center;
+    line-height: 160px;
   }
 
   .el-container {
