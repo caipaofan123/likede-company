@@ -18,6 +18,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="onclose">取 消</el-button>
+
       <el-button type="primary" @click="getReplenish">确 定</el-button>
     </span>
   </el-dialog>
@@ -29,7 +30,6 @@ export default {
     return {
       num: "",
       alertValue: 0,
-
     };
   },
   props: {
@@ -63,13 +63,11 @@ export default {
     },
     // 自动补货工单阈值
     async getReplenish() {
-
-
       const data = await getReplenishApi({
         alertValue: data.alertValue,
       });
       console.log(res);
-      
+
       this.alertValue = res.data;
       this.$emit("update:visible", false);
     },
