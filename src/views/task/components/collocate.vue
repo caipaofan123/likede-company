@@ -64,6 +64,7 @@ export default {
     // 自动补货工单阈值
     async getReplenish() {
 
+
       const data = await getReplenishApi({
         alertValue: data.alertValue,
       });
@@ -71,7 +72,6 @@ export default {
       
       this.alertValue = res.data;
       this.$emit("update:visible", false);
-
     },
   },
   updated() {},
