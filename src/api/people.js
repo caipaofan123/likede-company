@@ -4,11 +4,11 @@ import request from "@/utils/request";
  * 人员搜索(列表页)
  * @returns
  */
-export function getPeopleList(data) {
+export function getPeopleList(params) {
   return request({
     url: "/api/user-service/user/search",
     method: "GET",
-    data,
+    params,
   });
 }
 
@@ -51,13 +51,36 @@ export function getImageUrlAPI(fileName) {
 }
 /**
  * 新增人员
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function getPeopleAddAPI(data) {
   return request({
     url: "/api/user-service/user",
     method: "POST",
     data,
+  });
+}
+/**
+ * 删除人员
+ * @param {*} id
+ * @returns
+ */
+export function delPeopleAPI(id) {
+  return request({
+    url: "/api/user-service/user/" + id,
+    method: "DELETE",
+  });
+}
+
+/**
+ * 修改人员
+ * @param {*} id
+ * @returns
+ */
+export function editPeopleAPI(id) {
+  return request({
+    url: "/api/user-service/user/" + id,
+    method: "PUT",
   });
 }

@@ -12,7 +12,12 @@
       label-width="100px"
     >
       <el-form-item label="人员名称：" prop="userName">
-        <el-input placeholder="请选择" v-model="formData.userName"></el-input>
+        <el-input
+          placeholder="请选择"
+          v-model="formData.userName"
+          maxlength="5"
+          show-word-limit
+        ></el-input>
       </el-form-item>
 
       <el-form-item label="角色：" prop="roleId">
@@ -27,7 +32,12 @@
       </el-form-item>
 
       <el-form-item label="联系电话：" prop="mobile">
-        <el-input placeholder="请选择" v-model="formData.mobile"></el-input>
+        <el-input
+          placeholder="请选择"
+          v-model="formData.mobile"
+          maxlength="11"
+          show-word-limit
+        ></el-input>
       </el-form-item>
 
       <el-form-item label="负责区域：" prop="regionName">
@@ -53,6 +63,9 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
+          <div class="el-upload__tip" slot="tip">
+            只能上传jpeg文件，且不超过2MB
+          </div>
           <img v-if="formData.image" :src="formData.image" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -78,6 +91,7 @@ import {
   getAreaList,
   getImageUrlAPI,
   getPeopleAddAPI,
+  editPeopleAPI,
 } from "@/api/people";
 export default {
   name: "add",
@@ -118,6 +132,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    // currentId: {
+    //   type: Number,
+    //   required: true,
+    // },
   },
   watch: {
     roleName(newVal, oldVal) {
@@ -188,9 +206,10 @@ export default {
       }
     },
     //修改编辑
-    getPeopleById(){
-      console.log(1531);
-    }
+    async getPeopleById() {
+      // await editPeopleAPI(this.$parent.currentId);
+      // console.log(this.$parent.currentId);
+    },
   },
   created() {
     this.getPeopleRoleList();
