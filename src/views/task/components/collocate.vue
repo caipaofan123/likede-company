@@ -28,11 +28,7 @@ export default {
   data() {
     return {
       num: "",
-<<<<<<< HEAD
-      alertValue: "",
-=======
       alertValue: 0,
->>>>>>> feature/task
     };
   },
   props: {
