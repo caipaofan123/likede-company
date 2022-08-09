@@ -7,7 +7,11 @@
       </el-form-item>
       <!-- 工单类型 -->
       <el-form-item label="工单类型">
-        <el-select style="width: 100%" placeholder="请选择活动区域">
+        <el-select
+          style="width: 100%"
+          placeholder="请选择活动区域"
+          v-model="staff"
+        >
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
@@ -21,7 +25,11 @@
         <el-col :span="10"></el-col>
       </el-row>
       <el-form-item label="运营人员">
-        <el-select style="width: 100%" placeholder="请选择活动区域">
+        <el-select
+          style="width: 100%"
+          placeholder="请选择活动区域"
+          v-model="operator"
+        >
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
@@ -43,7 +51,10 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      operator: "",
+      staff: "",
+    };
   },
   props: {
     visible: {

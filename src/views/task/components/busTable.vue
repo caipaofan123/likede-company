@@ -12,8 +12,9 @@
       width="120"
     />
     <el-table-column
-      prop="taskStatusTypeEntity.statusName"
+      prop="taskStatusTypeEntity.statusId"
       label="工单状态"
+      :formatter="tasStatusId"
       width="100"
     />
     <el-table-column prop="userName" label="运营人员" width="120" />
@@ -41,9 +42,14 @@ export default {
   components: {},
   methods: {
     // 处理工单方式
-    tasCreateType(row, column, index) {
-      return ["自动", "手动"][index];
+
+    tasCreateType(row) {
+      return row.createType === "1" ? "自动" : "手动";
     },
+    tasStatusId(row, column, index) {
+      return ["待办", "进行", "取消", "完成"][index];
+    },
+   
   },
   created() {},
   updated() {},

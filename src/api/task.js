@@ -1,10 +1,28 @@
 import request from "@/utils/request";
 
-export const getTask = () => {
+/**
+ * 
+ * @param {Object} params query
+ * @returns promise
+ */
+export function searchTasks(params) {
     return request({
-        url: '/api/task-service/task/search'
+        url: '/api/task-service/task/search',
+        params
     })
 }
+
+/**
+ * 工单状态列表
+ * @returns promise
+ */
+export function getTaskStatus() {
+    return request({
+        url: "/api/task-service/task/allTaskStatus",
+    });
+}
+
+
 /**
  * 获取补货预警值
  * @returns 
@@ -23,7 +41,7 @@ export function getOrderApi() {
 export function getReplenishApi(data) {
     return request({
         url: '/api/task-service/task/autoSupplyConfig',
-        method: post,
+        method: 'post',
         data,
 
     })
