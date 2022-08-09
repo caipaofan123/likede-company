@@ -8,6 +8,11 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn' // 导入本地化语言
+dayjs.locale('zh-cn') // 使用本地化语言
+
+
 import App from './App'
 import store from './store'
 import router from './router'
