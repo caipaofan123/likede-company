@@ -32,11 +32,41 @@ export function addRegionApi(data) {
 }
 
 
+/**
+ * 删除区域
+ * @param {String} id 区域id
+ * @returns 
+ */
 export function delRegionApi(id) {
   return request({ 
     url: '/api/vm-service/region/'+id,
     method: 'DELETE',
   })
 }
+
+/**
+ * 修改区域
+ * @param {String} id 区域id
+ * @returns 
+ */
+export function changeRegionApi(id,data) {
+  return request({ 
+    url: '/api/vm-service/region/'+id,
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 获取区域详情
+ * @param {String} id 区域id
+ * @returns 
+ */
+export function getRegionDetailApi(id) {
+  return request({ 
+    url: '/api/vm-service/node/vmList/'+id,
+  })
+}
+
 
 
