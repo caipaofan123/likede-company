@@ -33,7 +33,7 @@
       <el-form-item label="负责区域：" prop="regionName">
         <el-select
           placeholder="请选择"
-          v-model="formData.regionId"
+          v-model="formData.regionName"
           style="width: 100%"
         >
           <el-option
@@ -55,31 +55,32 @@
         >
           <img v-if="formData.image" :src="formData.image" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          <template slot="tip"
-            >支持扩展名：jpg、png，文件不得大于100kb
-          </template>
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="状态：" prop="status">
-        <el-checkbox
-          v-model="formData.status"
-          value="1"
-          label="是否启用"
-        ></el-checkbox>
+      <el-form-item label="状态：">
+        <el-checkbox label="是否启用" v-model="formData.status"></el-checkbox>
       </el-form-item>
     </el-form>
 
     <span slot="footer" class="dialog-footer">
-      <el-button @click="outsideClose">取 消</el-button>
-      <el-button type="primary" class="established-button">确 定</el-button>
+      <el-button @click="outsideClose" name="type">取 消</el-button>
+      <el-button type="primary" class="established-button" @click="commit">
+        确 定
+      </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { getPeopleRoleList, getAreaList, getImageUrlAPI } from "@/api/people";
+import {
+  getPeopleRoleList,
+  getAreaList,
+  getImageUrlAPI,
+  getPeopleAddAPI,
+} from "@/api/people";
 export default {
+  name: "add",
   data() {
     return {
       // imageUrl: "",
@@ -95,7 +96,7 @@ export default {
       },
       formRules: {
         userName: [{ required: true, message: "请输入", trigger: "blur" }],
-        roleId: [{ required: true, message: "请输入", trigger: "blur" }],
+        roleId: [{ required: true, message: "请输入", trigger: "change" }],
         mobile: [
           { required: true, message: "请输入", trigger: "blur" },
           {
@@ -104,7 +105,7 @@ export default {
             trigger: "blur",
           },
         ],
-        regionName: [{ required: true, message: "请输入", trigger: "blur" }],
+        regionName: [{ required: true, message: "请输入", trigger: "change" }],
         image: [{ required: true, message: "请上传", trigger: "blur" }],
       },
       roleList: [], //返回的角色列表
@@ -125,6 +126,15 @@ export default {
       } else if (newVal === "维修员") {
         this.formData.roleId = 3;
       }
+    },
+  },
+  computed: {
+    regionId() {
+      let regionCurrent = {};
+      regionCurrent = this.areaList.find(
+        (item) => item.name === this.formData.regionName
+      );
+      return regionCurrent?.id;
     },
   },
   methods: {
@@ -158,11 +168,29 @@ export default {
     async getAreaList() {
       const { data } = await getAreaList({ pageSize: 50 });
       this.areaList = data.currentPageRecords;
-      // console.log(data);
     },
+    //关闭弹窗
     outsideClose() {
       this.$emit("update:visible", false);
     },
+    //确认新增
+    async commit() {
+      this.formData.regionId = this.regionId;
+      //validate回调为promise
+      await this.$refs.form.validate();
+      try {
+        await getPeopleAddAPI(this.formData);
+        this.$message.success("添加人员成功");
+        this.outsideClose();
+        this.$emit("finishedAdd");
+      } catch (error) {
+        this.$message.error("添加人员失败");
+      }
+    },
+    //修改编辑
+    getPeopleById(){
+      console.log(1531);
+    }
   },
   created() {
     this.getPeopleRoleList();

@@ -15,10 +15,11 @@ export function getPeopleList() {
  * 角色列表
  * @returns
  */
-export function getPeopleRoleList() {
+export function getPeopleRoleList(data) {
   return request({
     url: "/api/user-service/role",
     method: "GET",
+    data,
   });
 }
 /**
@@ -33,6 +34,11 @@ export function getAreaList(params) {
   });
 }
 
+/**
+ * 图片上传
+ * @param {*} fileName
+ * @returns
+ */
 export function getImageUrlAPI(fileName) {
   return request({
     url: "/api/vm-service/sku/fileUpload",
@@ -41,5 +47,13 @@ export function getImageUrlAPI(fileName) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+  });
+}
+
+export function getPeopleAddAPI(data) {
+  return request({
+    url: "/api/user-service/user",
+    method: "POST",
+    data,
   });
 }

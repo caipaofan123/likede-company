@@ -38,15 +38,22 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">
+            <el-button @click="handleClick" type="text" size="small">
               修改
             </el-button>
-            <el-button type="text" size="small" class="del">删除</el-button>
+            <el-button type="text" size="small" class="del" @click="del"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <AddPeople :visible.sync="dialogVisible"></AddPeople>
+
+    <AddPeople
+      :visible.sync="dialogVisible"
+      :finishedAdd="getPeopleList"
+      ref="addPeople"
+    ></AddPeople>
   </div>
 </template>
 
@@ -77,19 +84,27 @@ export default {
     indexMethod(index) {
       return index + 1;
     },
-    //新建的点击事件
+    //新建
     addDialog() {
       this.dialogVisible = true;
     },
+    //查询
     onSubmit() {
       // console.log("submit!");
     },
-    handleClick(row) {
-      // console.log(row);
+    //修改
+    handleClick() {
+      this.dialogVisible = true;
+      this.$refs.addPeople.getPeopleById();
+    },
+    //删除
+    del() {
+      console.log(111);
     },
 
-    async getPeopleList() {
-      const res = await getPeopleList();
+    //刷新渲染数据
+    async getPeopleList(val) {
+      const res = await getPeopleList(val);
       // console.log(res);
       this.tableData = res.data.currentPageRecords;
     },
