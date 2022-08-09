@@ -1,55 +1,124 @@
 <template>
   <div>
-    <SearchCard></SearchCard>
     <el-card class="box-card">
-      <template>
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="userId" label="序号" width="80">
-          </el-table-column>
-          <el-table-column prop="taskCode" label="工单编号" width="80">
-          </el-table-column>
-          <el-table-column prop="innerCode" label="设备编号" width="80">
-          </el-table-column>
-          <el-table-column prop="taskType" label="工单类型" width="80">
-          </el-table-column>
-          <el-table-column prop="updateTime" label="工单方式" width="80">
-          </el-table-column>
-          <el-table-column prop="taskStatus" label="工单状态" width="80">
-          </el-table-column>
-          <el-table-column prop="userName" label="运营人员" width="80">
-          </el-table-column>
-          <el-table-column prop="updateTime" label="创建日期" width="80">
-          </el-table-column>
-          <el-table-column prop="updateTime" label="操作"> </el-table-column>
-        </el-table>
-      </template>
+      <el-form
+        ref="form"
+        :inline="true"
+        :model="formInline"
+        label-width="100px"
+      >
+        <el-form-item label="工单编号：">
+          <el-input v-model="formInline.innerCode"></el-input>
+        </el-form-item>
+        <el-form-item label="工单状态:">
+          <el-select v-model="formInline.status" placeholder="请选择活动区域">
+            <el-option
+              v-for="item in taskStatusList"
+              :key="item.statusId"
+              :label="item.statusName"
+              :value="item.statusId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="search">查询</el-button>
+        </el-form-item>
+      </el-form>
+
+      <!-- 按钮 -->
+
+      <div>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-button
+              type="warning"
+              size="small"
+              icon="el-icon-plus"
+              @click="onClick"
+              >新建</el-button
+            >
+            <el-button
+              type="warning"
+              size="small"
+              class="btn"
+              @click="onCollocate"
+              >工单配置</el-button
+            >
+          </el-col>
+        </el-row>
+      </div>
+      <!-- 表单 -->
+      <BusTable :tableData="tableData"></BusTable>
+
+      <!-- 弹层 -->
+      <AddTask :visible.sync="dialogVisible"></AddTask>
+      <!-- 工单配置弹层 -->
+      <collocate :visible.sync="dialogcollocate"></collocate>
     </el-card>
   </div>
 </template>
 
 <script>
-import {getTask} from '@/api/task'
-import SearchCard from "@/components/SearchCard";
+import { searchTasks, getTaskStatus } from "@/api/task";
+// import SearchCard from "@/components/SearchCard";
+import AddTask from "./components/addTask.vue";
+import BusTable from "./components/busTable.vue";
+import collocate from "./components/collocate";
+
 export default {
   name: "business",
   data() {
     return {
-      tableData:[]
+      // 查询输入数据
+      formInline: {
+        innerCode: "",
+        status: "",
+      },
+      tableData: [],
+      taskStatusList: [],
+      dialogVisible: false,
+      dialogcollocate: false,
     };
   },
   components: {
-    SearchCard,
+    // SearchCard,
+
+    AddTask,
+    BusTable,
+    collocate,
   },
   created() {
     this.searchTasks();
     this.getTaskStatus();
   },
   methods: {
-     async getTask(){
-      const res = await getTask()
+    async searchTasks() {
+      const res = await searchTasks({
+        isRepair: false,
+      });
       console.log(res);
-      this.tableData=res.data.currentPageRecords
-    }
+      this.tableData = res.data.currentPageRecords;
+      // console.log(this.tableData);
+    },
+    //获取工单状态
+    async getTaskStatus() {
+      const res = await getTaskStatus();
+      console.log(res);
+      this.taskStatusList = res.data;
+      // console.log(this.taskStatusList);
+    },
+    onClick() {
+      this.dialogVisible = true;
+    },
+    // 工单配置
+    onCollocate() {
+      this.dialogcollocate = true;
+    },
+    //搜索查询
+    async search() {
+      await this.searchTasks(this.formInline);
+      // console.log(1111);
+    },
   },
 };
 </script>
