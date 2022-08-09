@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       num: "",
+      alertValue: 0,
     };
   },
   props: {
@@ -50,19 +51,22 @@ export default {
   methods: {
     async getOrder() {
       const res = await getOrderApi();
-      console.log(res);
+      // console.log(res);
       // 把值赋给输入框
       this.num = res.data;
       // 关闭弹窗
     },
     onclose() {
-      console.log("点击");
+      // console.log("点击");
       this.$emit("update:visible", false);
     },
     // 自动补货工单阈值
     async getReplenish() {
-      const res = await getReplenishApi();
-      console.log(res);
+      const res = await getReplenishApi({
+        alertValue: this.num,
+      });
+      this.alertValue = res.data;
+      this.$emit("update:visible", false);
     },
   },
   updated() {},
