@@ -19,7 +19,7 @@ export default {
   },
   components: {
     Dheader,
-    Dsidebar
+    Dsidebar,
   },
   created() {},
 
@@ -36,7 +36,7 @@ export default {
     background-color: #b3c0d1;
     color: #333;
     text-align: center;
-    line-height: 60px;
+    // line-height: 60px;
     padding: 0 0;
   }
 
@@ -52,7 +52,10 @@ export default {
     background-color: #e9eef3;
     color: #333;
     // text-align: center;
+    // line-height: 30px;
+
     // line-height: 160px;
+
   }
 
   .el-container {
