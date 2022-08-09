@@ -18,7 +18,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="onclose">取 消</el-button>
-      <el-button type="primary">确 定</el-button>
+      <el-button type="primary" @click="onClick">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -66,6 +66,9 @@ export default {
         alertValue: this.num,
       });
       this.alertValue = res.data;
+      this.$emit("update:visible", false);
+    },
+    onClick() {
       this.$emit("update:visible", false);
     },
   },
