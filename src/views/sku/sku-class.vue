@@ -1,7 +1,18 @@
 <template>
   <div class="skuClss_container">
     <div class="skuClssHeader">
-      <SearchCard />
+      <template>
+        <el-card class="box-card">
+          <el-form ref="form" :inline="true" label-width="120px">
+            <el-form-item label="商品类型搜索：">
+              <el-input v-model="searchClass" placeholder="请输入" />
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="el-icon-search" type="primary" @click="searchSku">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </template>
     </div>
     <div class="skuClssContent">
       <el-button icon="el-icon-circle-plus-outline" type="warning" @click="addSku">新建</el-button>
@@ -11,42 +22,93 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="classId"
+            type="index"
             label="序号"
             width="80"
           />
           <el-table-column
             prop="className"
             label="商品类型名称"
-            width="980"
+            width="580"
           />
           <el-table-column
             prop="right"
             label="操作"
           >
-            <template slot-scope="scope">
-              <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
-              <el-button type="text" size="small" @click="handleClick(scope.row,onRemove)">删除</el-button>
+            <template slot-scope="{row}">
+              <el-button type="text" size="small" @click="putskuClass(row)">修改</el-button>
+              <el-button type="text" size="small" @click="deleteskuClassApi(row.classId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </template>
     </div>
-    <skuTools :visible="dialogVisible" :table-data="tableData" />
+    <template>
+      <div>
+        <el-dialog
+          :title="dialigTitle"
+          :visible="dialogVisible"
+          width="55%"
+          @close="btnCancel"
+        >
+          <el-form
+            ref="roleForm"
+            :model="formData"
+            :rules="formRules"
+            label-width="130px"
+          >
+            <el-form-item label="商品类型名称：" prop="name">
+              <el-input v-model="formData.name" placeholder="请输入" />
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="btnCancel">取 消</el-button>
+            <el-button type="primary" @click="onSave">确 定</el-button>
+          </span></el-dialog>
+      </div>
+    </template>
   </div>
 
 </template>
 
 <script>
-import skuTools from './components/sku-tools.vue'
-import { getskuClassApi } from '@/api/sku'
-import SearchCard from '@/components/SearchCard'
+import { getskuClassApi, deleteskuClassApi, putskuClassApi, searchskuClassApi, addskuClassApi } from '@/api/sku'
 export default {
-  components: { SearchCard, skuTools },
   data() {
     return {
+      searchClass: '',
       tableData: [],
-      dialogVisible: false
+      dialogVisible: false,
+      skuId: '',
+      formData: {
+        name: ''
+      },
+      formRules: {
+        name: [
+          { required: true, message: '商品类型名称不能为空', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              const isRepeat = this.tableData.some((item) => {
+                return item.className === value
+              })
+              if (isRepeat) return callback(new Error('商品名称重复'))
+              callback()
+            },
+            trigger: 'blur'
+          },
+          {
+            min: 1,
+            max: 10,
+            message: '商品类型名称要求1-10个字符',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
+  },
+  computed: {
+    dialigTitle() {
+      return this.skuId ? '修改商品类型' : '新建商品类型'
     }
   },
 
@@ -63,20 +125,53 @@ export default {
     addSku() {
       this.dialogVisible = true
     },
-    handleClick() {
+    async deleteskuClassApi(classId) {
+      try {
+        await this.$confirm('确定删除商品类型吗')
+        await deleteskuClassApi(classId)
+        this.getSkuClass()
+        this.$message.success()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    putskuClass(row) {
+      this.formData.name = row.className
+      this.skuId = row
       this.dialogVisible = true
     },
-    async onRemove() {
-      // console.log(this.tableData.classId)
-      console.log(11)
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        console.log('点击确认删除')
-        console.log(this.tableData)
+    async onSave() {
+      try {
+        await this.$refs.roleForm.validate()
+        if (this.skuId) {
+          await putskuClassApi(
+            this.data = this.skuId,
+            this.className = this.formData.name)
+        } else {
+          await addskuClassApi(this.formData.name)
+        }
+
+        // 重新拉取数据
+        this.$message.success('操作成功')
+        this.dialogVisible = false
+        this.getSkuClass()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async searchSku() {
+      const res = await searchskuClassApi()
+      console.log(res)
+      this.tableData = res.data.currentPageRecords.filter((item) => {
+        return item.className === this.searchClass
       })
+    },
+    btnCancel() {
+      this.formData.name = ''
+      // 移除校验
+      this.$refs.roleForm.resetFields()
+      console.log(this.$refs.roleForm)
+      this.dialogVisible = false
     }
   }
 }
