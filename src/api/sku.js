@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
 // 获取全部商品类型
-export const getskuClassApi = () => {
+export const getskuClassApi = (params) => {
   return request({
-    url: '/api/vm-service/skuClass/search'
+    url: '/api/vm-service/skuClass/search',
+    params
   })
 }
 
@@ -21,6 +22,14 @@ export const addskuClassApi = (className) => {
     url: '/api/vm-service/skuClass',
     method: 'POST',
     data: { className }
+  })
+}
+// 新增商品
+export const addskuApi = (data) => {
+  return request({
+    url: '/api/vm-service/sku',
+    method: 'POST',
+    data
   })
 }
 // 修改商品类型
@@ -42,23 +51,45 @@ export const searchskuClassApi = () => {
 }
 
 // 商品搜索
-export const searchskuApi = (orderNo, pageIndex, pageSize = 10) => {
+export const searchskuApi = (params) => {
   return request({
     url: '/api/vm-service/sku/search',
-    params: {
-      orderNo,
-      pageIndex,
-      pageSize
+    params
+  })
+}
+
+// 修改商品
+export const putskuApi = (data) => {
+  return request({
+    url: `/api/vm-service/sku/${data.skuId}`,
+    method: 'put',
+    data
+  })
+}
+
+// // 上传图片
+// export const getImgUrlApi = (fileName) => {
+//   return request({
+//     url: '/api/vm-service/sku/fileUpload',
+//     method: 'POST',
+//     headers: { 'Content-Type': 'multipart/form-data' },
+//     data: fileName
+//   })
+// }
+
+/**
+ * 图片上传
+ * @param {*} fileName
+ * @returns
+ */
+export function getImageUrlAPI(fileName) {
+  return request({
+    url: '/api/vm-service/sku/fileUpload',
+    method: 'POST',
+    data: fileName,
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
   })
 }
 
-// 上传图片
-export const getImgUrlApi = (fileName) => {
-  return request({
-    url: '/api/vm-service/sku/fileUpload',
-    method: 'POST',
-    headers: { 'Content-Type': 'multipart/form-data' },
-    data: fileName
-  })
-}

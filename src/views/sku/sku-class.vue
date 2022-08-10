@@ -148,7 +148,9 @@ export default {
             this.data = this.skuId,
             this.className = this.formData.name)
         } else {
-          await addskuClassApi(this.formData.name)
+          await addskuClassApi(
+            this.formData.name
+          )
         }
 
         // 重新拉取数据
@@ -170,7 +172,6 @@ export default {
       this.formData.name = ''
       // 移除校验
       this.$refs.roleForm.resetFields()
-      console.log(this.$refs.roleForm)
       this.dialogVisible = false
     }
   }

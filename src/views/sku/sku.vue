@@ -5,7 +5,7 @@
         <el-card class="box-card">
           <el-form ref="form" :inline="true" label-width="120px">
             <el-form-item label="商品搜索：">
-              <el-input v-model="skuName" placeholder="请输入" />
+              <el-input v-model="skuName1" placeholder="请输入" />
             </el-form-item>
             <el-form-item>
               <el-button icon="el-icon-search" type="primary" @click="searchSkuName">查询</el-button>
@@ -15,7 +15,7 @@
       </template>
     </div>
     <div class="skuContent">
-      <el-button icon="el-icon-circle-plus-outline" type="warning">新建</el-button>
+      <el-button icon="el-icon-circle-plus-outline" type="warning" @click="addSku">新建</el-button>
       <el-button icon="el-icon-circle-plus-outline" type="warning">导入数据</el-button>
       <template>
         <el-table
@@ -66,8 +66,8 @@
             prop="right"
             label="操作"
           >
-            <template slot-scope="{}">
-              <el-button type="text" size="small" @click="uptsku">修改</el-button>
+            <template slot-scope="{row}">
+              <el-button type="text" size="small" @click="uptsku(row)">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -85,7 +85,7 @@
     <template>
       <div>
         <el-dialog
-          title="修改商品"
+          :title="dialigTitle"
           :visible="dialogVisible"
           width="630px"
           @close="btnCancel"
@@ -95,47 +95,47 @@
             :v-model="formData"
             label-width="130px"
           >
-            <el-form-item label="商品名称" prop="skuName">
+            <el-form-item label="商品名称">
               <el-input
                 v-model="formData.skuName"
                 maxlength="10"
               />
             </el-form-item>
-            <el-form-item label="品牌" prop="brandName">
+            <el-form-item label="品牌">
               <el-input
                 v-model="formData.brandName"
                 show-word-limit
                 maxlength="10"
               />
             </el-form-item>
-            <el-form-item label="商品价格(元)：" prop="price">
-              <el-input-number v-model="formData.price" controls-position="right" :min="0.01" :max="10" @change="handleChange" />
+            <el-form-item label="商品价格(元)：">
+              <el-input-number v-model="formData.price " controls-position="right" :min="0.01" :max="10" />
             </el-form-item>
-            <el-form-item label="商品类型" prop="classId">
+            <el-form-item label="商品类型">
               <el-select v-model="formData.classId" placeholder="请选择商品类型" style="width: 100%">
-                <!-- <el-option :label="item.className" :value="item.classId" /> -->
+                <el-option v-for="item in employees" :key="item.id" :label="item.className" :value="item.classId" />
               </el-select>
             </el-form-item>
-            <el-form-item label="规格" prop="unit">
+            <el-form-item label="规格">
               <el-input
                 v-model="formData.unit"
                 show-word-limit
                 maxlength="10"
               />
             </el-form-item>
-            <el-form-item label="商品图片" prop="">
+            <el-form-item label="头像：">
               <el-upload
                 class="avatar-uploader"
-                action=""
+                action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
               >
+                <div slot="tip" class="el-upload__tip">
+                  只能上传jpeg,png文件，且不超过2MB
+                </div>
                 <img v-if="formData.skuImage" :src="formData.skuImage" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
-                <div slot="tip" class="el_upload__tip">
-                  仅支持扩展名为jpg/png文件，且不超过100kb
-                </div>
               </el-upload>
             </el-form-item>
           </el-form>
@@ -150,19 +150,19 @@
 </template>
 
 <script>
-import { searchskuApi, getImgUrlApi } from '@/api/sku'
+import { searchskuApi, getImageUrlAPI, getskuClassApi, putskuApi, addskuApi } from '@/api/sku'
 export default {
   data() {
     return {
-      aa: '',
-      imageUrl: '',
+      employees: [],
+      item: [],
       disabled: false,
       disabled1: false,
       tableData: [],
       pages: [],
       dialogVisible: false,
       num: 1,
-      skuName: '',
+      skuName1: '',
       pageIndex: 1,
       formData: {
         skuImage: '',
@@ -172,29 +172,14 @@ export default {
         brandName: '',
         skuName: '',
         skuId: ''
-        // item: {
-        //   className: '',
-        //   classId: ''
-        // }
-        // rules: {
-        //   // 表单校验
-        //   skuImage: [{ required: true, message: '请选择图片', trigger: 'blur' }],
-        //   unit: [{ required: true, message: '请输入商品规格', trigger: 'blur' }],
-        //   classId: [
-        //     { required: true, message: '请选择商品类型', trigger: 'blur' }
-        //   ],
-        //   price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
-        //   brandName: [
-        //     { required: true, message: '请输入品牌名称', trigger: 'blur' }
-        //   ],
-        //   skuName: [
-        //     { required: true, message: '请输入商品名称', trigger: 'blur' }
-        //   ]
-        // }
       }
     }
   },
-
+  computed: {
+    dialigTitle() {
+      return this.formData.skuId ? '修改商品' : '新建商品'
+    }
+  },
   created() {
     this.searchsku()
   },
@@ -215,23 +200,63 @@ export default {
     },
     // 关闭弹窗
     btnCancel() {
+      this.formData = ''
+      // 移除校验
+      this.$refs.formData.resetFields()
       this.dialogVisible = false
     },
     handleChange() {
       console.log(1)
     },
     // 确定按钮
-    onSave() {
-      console.log(1)
+    async onSave() {
+      try {
+        // await this.refs.formData.validate()
+        if (this.formData.skuId) {
+          await putskuApi(this.formData)
+        } else {
+          await addskuApi({
+            brandName: this.formData.brandName,
+            classId: this.formData.classId,
+            price: this.formData.price,
+            skuImage: this.formData.skuImage,
+            skuName: this.formData.skuName,
+            unit: this.formData.unit
+          }
+          )
+        }
+        // 重新拉取数据
+        this.$message.success('操作成功，nb啊')
+        this.dialogVisible = false
+        this.searchsku()
+        this.$message.success()
+      } catch (error) {
+        console.log(error)
+      }
+      this.searchsku
     },
     // 点击修改开启弹窗
-    uptsku() {
+    async uptsku(row) {
+      const res = await getskuClassApi({})
+      this.employees = res.data.currentPageRecords
+      this.formData = row
+      this.dialogVisible = true
+      console.log(this.formData)
+    },
+    // 点击新建开启弹窗
+    async addSku() {
+      const res = await getskuClassApi({})
+      this.employees = res.data.currentPageRecords
+      await getskuClassApi({})
       this.dialogVisible = true
     },
     // 搜索商品
     async searchSkuName() {
       console.log(this.skuName)
-      const res = await searchskuApi(this.skuName)
+      const res = await searchskuApi(
+        { pageIndex: this.pageIndex,
+          skuName: this.skuName1 }
+      )
       this.tableData = res.data.currentPageRecords
       this.pages = res.data
     },
@@ -242,7 +267,7 @@ export default {
       } else {
         this.disabled1 = false
 
-        const res = await searchskuApi(this.skuName = '', this.pageIndex = this.pageIndex - 1)
+        const res = await searchskuApi({ pageIndex: this.pageIndex - 1 })
         this.tableData = res.data.currentPageRecords
         this.pages = res.data
       }
@@ -254,33 +279,34 @@ export default {
         this.disabled1 = true
       }
       this.disabled = false
-      const res = await searchskuApi(this.skuName = '', this.pageIndex = this.pageIndex + 1)
+      const res = await searchskuApi({ pageIndex: this.pageIndex + 1 })
       this.tableData = res.data.currentPageRecords
       this.pages = res.data
     },
-    async handleAvatarSuccess(reg, file) {
-      console.log(reg)
+    // 图片转址
+    async handleAvatarSuccess(res, file) {
+      console.log(res)
       console.log(file)
       const formData = new FormData()
       formData.append('fileName', file.raw)
-      const res = await getImgUrlApi(formData)
-      this.formData.skuImage = res
+      const { data } = await getImageUrlAPI(formData)
+      this.formData.skuImage = data
     },
+    // 图片限制
     beforeAvatarUpload(file) {
-      console.log(file)
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG ISPNG格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!')
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('上传头像图片大小不能超过 2MB!')
+      // }
+      // return isJPG && isLt2M
       return (isJPG && isLt2M) || (isPNG && isLt2M)
     }
-
   }
 }
 </script>
@@ -329,14 +355,14 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 78px;
+    height: 78px;
+    line-height: 78px;
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 78px;
+    height: 78px;
     display: block;
   }
 </style>
