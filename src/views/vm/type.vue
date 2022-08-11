@@ -1,13 +1,15 @@
 <template>
   <div>
     <el-card class="box-card">
-      <el-form ref="form" label-width="100px">
-        <el-form-item label="设备编号：">
-          <el-input></el-input>
+      <el-form ref="form" :form="formData" label-width="100px">
+        <el-form-item label="设备名搜索：">
+          <el-input v-model="formData.name"></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="search" icon="el-icon-search"
+            >查询</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -56,7 +58,7 @@
 
 <script>
 import vmEdit from "./components/vm-edit.vue";
-import { getVms } from "@/api/vm";
+import { getVms, delVm } from "@/api/vm";
 export default {
   data() {
     return {
@@ -65,6 +67,9 @@ export default {
       dialogVisible: false,
       // currentIndex:1,
       dataInfo: {},
+      formData: {
+        name: "",
+      },
     };
   },
   components: {
@@ -77,7 +82,7 @@ export default {
   methods: {
     async getVms() {
       const res = await getVms();
-      // console.log(res);
+      console.log(res);
       this.tableData = res.data.currentPageRecords;
     },
     handleEdit(index, data) {
@@ -85,9 +90,19 @@ export default {
       this.dataInfo = data;
       // console.log(this.dataInfo);
     },
-    handleDelete() {},
+    async handleDelete(index, data) {
+      const res = await delVm(data.typeId);
+      console.log(res);
+      this.getVms();
+    },
     onClose() {
       this.dialogVisible = false;
+    },
+    async search() {
+      // const vm=this.tableData.filter(item=>item.model==this.formData.model)
+      const res = await getVms(this.formData.name);
+      console.log(res);
+      this.tableData = res.data.currentPageRecords;
     },
   },
 };

@@ -18,6 +18,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="onclose">取 消</el-button>
+
       <el-button type="primary" @click="getReplenish">确 定</el-button>
     </span>
   </el-dialog>
@@ -28,7 +29,7 @@ export default {
   data() {
     return {
       num: "",
-      alertValue: "",
+      alertValue: 0,
     };
   },
   props: {
@@ -51,13 +52,13 @@ export default {
   methods: {
     async getOrder() {
       const res = await getOrderApi();
-      console.log(res);
+      // console.log(res);
       // 把值赋给输入框
       this.num = res.data;
       // 关闭弹窗
     },
     onclose() {
-      console.log("点击");
+      // console.log("点击");
       this.$emit("update:visible", false);
     },
     // 自动补货工单阈值
@@ -66,6 +67,9 @@ export default {
         alertValue: data.alertValue,
       });
       console.log(res);
+
+      this.alertValue = res.data;
+      this.$emit("update:visible", false);
     },
   },
   updated() {},

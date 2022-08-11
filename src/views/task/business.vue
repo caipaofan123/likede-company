@@ -1,14 +1,32 @@
 <template>
   <div>
     <el-card class="box-card">
-      <SearchCard></SearchCard>
+      <el-form
+        ref="form"
+        :inline="true"
+        :model="formInline"
+        label-width="100px"
+      >
+        <el-form-item label="工单编号：">
+          <el-input v-model="formInline.innerCode"></el-input>
+        </el-form-item>
+        <el-form-item label="工单状态:">
+          <el-select v-model="formInline.status" placeholder="请选择活动区域">
+            <el-option
+              v-for="item in taskStatusList"
+              :key="item.statusId"
+              :label="item.statusName"
+              :value="item.statusId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="search">查询</el-button>
+        </el-form-item>
+      </el-form>
 
       <!-- 按钮 -->
-      <!-- <headBtn
-        :btnType="mainBtnType"
-        :btnLabel="mainBtnLabelName"
-        :btnIcon="mainBtnIcon"
-      ></headBtn> -->
+
       <div>
         <el-row :gutter="20">
           <el-col :span="6">
@@ -41,42 +59,53 @@
 </template>
 
 <script>
-import { getTask } from "@/api/task";
-import SearchCard from "@/components/SearchCard";
-import headBtn from "@/components/headBtn";
+import { searchTasks, getTaskStatus } from "@/api/task";
+// import SearchCard from "@/components/SearchCard";
 import AddTask from "./components/addTask.vue";
 import BusTable from "./components/busTable.vue";
 import collocate from "./components/collocate";
 
 export default {
+  name: "business",
   data() {
     return {
+      // 查询输入数据
+      formInline: {
+        innerCode: "",
+        status: "",
+      },
       tableData: [],
-      // headBtnType: "primary",
-      // mainBtnType: "warning",
-      // headBtnLabelName: "查询",
-      // mainBtnLabelName: "新增",
-      // headBtnIcon: "el-icon-search",
-      // mainBtnIcon: "el-icon-circle-plus-outline",
+      taskStatusList: [],
       dialogVisible: false,
       dialogcollocate: false,
     };
   },
   components: {
-    SearchCard,
-    headBtn,
+    // SearchCard,
+
     AddTask,
     BusTable,
     collocate,
   },
   created() {
-    this.getTask();
+    this.searchTasks();
+    this.getTaskStatus();
   },
   methods: {
-    async getTask() {
-      const res = await getTask();
-      // console.log(res);
+    async searchTasks() {
+      const res = await searchTasks({
+        isRepair: false,
+      });
+      console.log(res);
       this.tableData = res.data.currentPageRecords;
+      // console.log(this.tableData);
+    },
+    //获取工单状态
+    async getTaskStatus() {
+      const res = await getTaskStatus();
+      console.log(res);
+      this.taskStatusList = res.data;
+      // console.log(this.taskStatusList);
     },
     onClick() {
       this.dialogVisible = true;
@@ -85,7 +114,11 @@ export default {
     onCollocate() {
       this.dialogcollocate = true;
     },
-    // 获取补货预警值
+    //搜索查询
+    async search() {
+      await this.searchTasks(this.formInline);
+      // console.log(1111);
+    },
   },
 };
 </script>
