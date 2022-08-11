@@ -190,6 +190,16 @@ export default {
     //关闭弹窗
     outsideClose() {
       this.$emit("update:visible", false);
+      this.$refs.form.validate();
+      this.formData = {
+        userName: "",
+        roleId: "",
+        mobile: "",
+        regionId: "", //所属区域Id
+        regionName: "", //所属区域名称
+        status: false,
+        image: "",
+      };
     },
     //确认新增
     async commit() {
